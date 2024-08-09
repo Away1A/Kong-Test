@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Tester</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Kong API Tester</h1>
+
+    <!-- API: /api/login -->
+    <div class="api-section">
+        <h2>Login</h2>
+        <form id="login-form">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">Login</button>
+        </form>
+        <pre id="login-response"></pre>
+    </div>
+
+    <!-- API: /objects (GET) -->
+    <div class="api-section">
+        <h2>Get All Objects</h2>
+        <button id="get-objects">Fetch Objects</button>
+        <pre id="objects-response"></pre>
+    </div>
+
+    <!-- API: /objects (POST) -->
+    <div class="api-section">
+        <h2>Add Object</h2>
+        <form id="add-object-form">
+            <label for="object-name">Object Name:</label>
+            <input type="text" id="object-name" name="object-name" required>
+            <button type="submit">Add Object</button>
+        </form>
+        <pre id="add-object-response"></pre>
+    </div>
+
+    <!-- API: /api/countries -->
+    <div class="api-section">
+        <h2>Get Countries</h2>
+        <button id="get-countries">Fetch Countries</button>
+        <pre id="countries-response"></pre>
+    </div>
+
+    <!-- API: /api/users -->
+    <div class="api-section">
+        <h2>Get Users</h2>
+        <button id="get-users">Fetch Users</button>
+        <pre id="users-response"></pre>
+    </div>
+
+    <!-- API: /api/products -->
+    <div class="api-section">
+        <h2>Get Products</h2>
+        <button id="get-products">Fetch Products</button>
+        <pre id="products-response"></pre>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
