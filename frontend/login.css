@@ -1,0 +1,146 @@
+/* Reset default browser styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body,
+html {
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    background-color: #ffffff;
+}
+
+/* Fullscreen layout for login */
+.login-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Left side: background image with overlay */
+.login-image {
+    flex: 1;
+    background: url('../frontend/img/bg.png') no-repeat center center/cover;
+    position: relative;
+    background-size: 50%;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Right side: login form */
+.login-box {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #423fe2;
+    padding: 40px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Stylish login form box */
+.login-box-content {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    /* Adding the subtle gray border around the form */
+    border: 1px solid #ddd;
+    /* Light gray border */
+}
+
+h2 {
+    margin-bottom: 10px;
+    color: #0366d6;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+p {
+    margin-bottom: 30px;
+    font-size: 16px;
+    color: #555;
+}
+
+/* Form fields */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+input:focus {
+    border-color: #0366d6;
+    outline: none;
+    box-shadow: 0 0 8px rgba(3, 102, 214, 0.2);
+}
+
+/* Stylish submit button */
+button {
+    padding: 14px;
+    background-color: #0366d6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: #024c99;
+    transform: translateY(-2px);
+}
+
+/* Extra links below the form */
+.extra-links {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.extra-links a {
+    color: #0366d6;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+
+.extra-links a:hover {
+    color: #024c99;
+    text-decoration: underline;
+}
+
+/* Pre-response styling */
+pre {
+    margin-top: 10px;
+    text-align: left;
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+}

@@ -3,64 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Tester</title>
+    <title>Animal Management</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <h1>Kong API Tester</h1>
+    <div class="container">
+        <h1>Animal Management</h1>
 
-    <!-- API: /api/login -->
-    <div class="api-section">
-        <h2>Login</h2>
-        <form id="login-form">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-            <button type="submit">Login</button>
-        </form>
-        <pre id="login-response"></pre>
+        <!-- Button to go back to dashboard -->
+        <div class="back-button-container">
+            <button id="back-to-dashboard" onclick="location.href='dashboard.html'">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </button>
+        </div>
+
+        <!-- Form for adding and updating animals -->
+        <div class="form-container">
+            <h2 id="form-title">Add Animal</h2>
+            <form id="animal-form">
+                <input type="hidden" id="animal-id">
+                <div>
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div>
+                    <label for="type">Type:</label>
+                    <input type="text" id="type" required>
+                </div>
+                <div>
+                    <label for="gender">Gender:</label>
+                    <input type="text" id="gender" required>
+                </div>
+                <div>
+                    <label for="age">Age:</label>
+                    <input type="number" id="age" required>
+                </div>
+                <div>
+                    <label for="price">Price:</label>
+                    <input type="number" id="price" required>
+                </div>
+                <div>
+                    <label for="description">Description:</label>
+                    <textarea id="description" required></textarea>
+                </div>
+                <!-- New field for status -->
+                <label for="status">Status:</label>
+                <select id="status" name="status" required>
+                    <option value="Available">Available</option>
+                    <option value="Sold">Sold</option>
+                </select><br>
+                <button type="submit" id="submit-button">Add Animal</button>
+            </form>
+        </div>
+
+        <!-- Table to display animals -->
+        <table class="animals-table" id="animals-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Gender</th>
+                    <th>Age</th>
+                    <th>Price</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="animals-body">
+                <!-- Animal rows will be dynamically added here -->
+            </tbody>
+        </table>
     </div>
-
-    <!-- API: /objects (GET) -->
-    <div class="api-section">
-        <h2>Get All Objects</h2>
-        <button id="get-objects">Fetch Objects</button>
-        <pre id="objects-response"></pre>
-    </div>
-
-    <!-- API: /objects (POST) -->
-    <div class="api-section">
-        <h2>Add Object</h2>
-        <form id="add-object-form">
-            <label for="object-name">Object Name:</label>
-            <input type="text" id="object-name" name="object-name" required>
-            <button type="submit">Add Object</button>
-        </form>
-        <pre id="add-object-response"></pre>
-    </div>
-
-    <!-- API: /api/countries -->
-    <div class="api-section">
-        <h2>Get Countries</h2>
-        <button id="get-countries">Fetch Countries</button>
-        <pre id="countries-response"></pre>
-    </div>
-
-    <!-- API: /api/users -->
-    <div class="api-section">
-        <h2>Get Users</h2>
-        <button id="get-users">Fetch Users</button>
-        <pre id="users-response"></pre>
-    </div>
-
-    <!-- API: /api/products -->
-    <div class="api-section">
-        <h2>Get Products</h2>
-        <button id="get-products">Fetch Products</button>
-        <pre id="products-response"></pre>
-    </div>
-
     <script src="script.js"></script>
 </body>
 </html>

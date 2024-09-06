@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - API Tester</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="login-container">
+        <!-- Left side with background image and overlay -->
+        <div class="login-image">
+            <div class="overlay"></div>
+        </div>
+
+        <!-- Right side with login form -->
+        <div class="login-box">
+            <div class="login-box-content">
+                <h2>Welcome Back!</h2>
+                <p>Please login to your account</p>
+                <form id="login-form">
+                    <div class="input-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit">Login</button>
+                </form>
+                <div class="extra-links">
+                    <a href="#">Forgot Password?</a>
+                    <a href="#">Create Account</a>
+                </div>
+                <pre id="login-response"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

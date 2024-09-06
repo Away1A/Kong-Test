@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Testing API Gateway</h1>
+        <p>Select an option to proceed</p>
+
+        <div class="menu-container">
+            <!-- Existing .NET option -->
+            <div class="menu-item" onclick="location.href='index.html'">
+                <img src="../frontend/img/NET.png" alt=".NET">
+                <h2>.NET</h2>
+                <p>View, add, or edit animals in the system.</p>
+            </div>
+
+            <!-- Existing Moleculer option -->
+            <div class="menu-item" onclick="location.href='users.html'">
+                <img src="../frontend/img/mole.png" alt="Moleculer">
+                <h2>Moleculer</h2>
+                <p>View and manage permitted, rejected, and approved.</p>
+            </div>
+
+            <!-- New Nest.js option -->
+            <div class="menu-item" onclick="location.href='nest.html'">
+                <img src="../frontend/img/nest.webp" alt="Nest.js">
+                <h2>Nest.js</h2>
+                <p>Manage APIs built with Nest.js framework.</p>
+            </div>
+        </div>
+
+        <!-- New Kong API Gateway Section -->
+        <div class="kong-container">
+            <h2>About Kong API Gateway</h2>
+            <div class="kong-info">
+                <img src="../frontend/img/kong.png" alt="Kong Logo">
+                <p>Kong API Gateway is one of the most popular and powerful API management tools. It provides comprehensive features such as load balancing, security, monitoring, and traffic control for APIs, making it a suitable choice for managing microservices and external APIs.</p>
+                <p>For more information, visit the official website: <a href="https://konghq.com/" target="_blank">KongHQ.com</a>.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logout button at the bottom -->
+    <div class="logout-container">
+        <button id="logout-button" onclick="logout()">Logout</button>
+    </div>
+
+    <script>
+        // Script for handling logout
+        function logout() {
+            // Clear user session or token (you can adjust this based on your authentication method)
+            alert("You have been logged out.");
+            location.href = 'login.html';  // Redirect to login page after logout
+        }
+    </script>
+</body>
+</html>

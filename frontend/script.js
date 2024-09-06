@@ -1,41 +1,43 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const apiBaseUrl = "http://172.17.144.1:9000"; // Ganti dengan URL Kong API Anda
+    const apiBaseUrl = "http://103.171.163.85:9000";
+    let editingAnimalId = null; 
 
-    // Login
     const loginForm = document.getElementById("login-form");
     const loginResponse = document.getElementById("login-response");
-    loginForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const username = e.target.username.value;
-        const password = e.target.password.value;
 
-        try {
-            const response = await fetch(`${apiBaseUrl}/api/login`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ username, password }),
-            });
-            const data = await response.json();
-            if (data.token) {
-                // Simpan token dan role ke localStorage
-                localStorage.setItem("authToken", data.token);
-                localStorage.setItem("userRole", data.role); // Simpan role
-                loginResponse.textContent = "Login successful! Token and role stored.";
-            } else {
-                loginResponse.textContent = `Error: ${data.message}`;
+    if (loginForm) {
+        loginForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const username = e.target.username.value;
+            const password = e.target.password.value;
+
+            try {
+                const response = await fetch(`http://127.0.0.1:2000/api/login`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ username, password }),
+                });
+                const data = await response.json();
+                if (data.token) {
+                    localStorage.setItem("authToken", data.token);
+                    localStorage.setItem("userRole", data.role);
+                    localStorage.setItem("userId", data.id);
+                    loginResponse.textContent = "Login successful! Token and role stored.";
+                    window.location = "dashboard.html";
+                } else {
+                    loginResponse.textContent = `Error: ${data.message}`;
+                }
+            } catch (error) {
+                loginResponse.textContent = `Error: ${error.message}`;
             }
-        } catch (error) {
-            loginResponse.textContent = `Error: ${error.message}`;
-        }
-    });
+        });
+    }
 
-    // Helper function to get token and role from storage
     const getAuthToken = () => localStorage.getItem("authToken");
     const getUserRole = () => localStorage.getItem("userRole");
 
-    // Check user role and access service
     const checkAccess = (allowedRoles) => {
         const role = getUserRole();
         if (!allowedRoles.includes(role)) {
@@ -44,128 +46,148 @@ document.addEventListener("DOMContentLoaded", () => {
         return null;
     };
 
-    // Get All Objects
-    const getObjectsButton = document.getElementById("get-objects");
-    const objectsResponse = document.getElementById("objects-response");
-    getObjectsButton.addEventListener("click", async () => {
-        const accessError = checkAccess(['user']);
-        if (accessError) {
-            objectsResponse.textContent = accessError;
-            return;
-        }
+    async function fetchAnimals() {
         try {
-            const jwtToken = getAuthToken();
-            const response = await fetch(`${apiBaseUrl}/objects`, {
-                method: "GET",
+            const response = await fetch(`${apiBaseUrl}/api/v1.0/animals`, {
                 headers: {
-                    "Authorization": `Bearer ${jwtToken}`
+                    'Authorization': `Bearer ${getAuthToken()}`
                 }
             });
-            const data = await response.json();
-            objectsResponse.textContent = JSON.stringify(data, null, 2);
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Error fetching animals');
+            }
+            const responseData = await response.json();
+            console.log('Fetched animals:', responseData); // Log the entire response
+            displayAnimals(responseData.data); // Pass the `data` array to `displayAnimals`
         } catch (error) {
-            objectsResponse.textContent = `Error: ${error.message}`;
+            console.error('Error fetching animals:', error);
         }
-    });
+    }
 
-    // Add Object
-    const addObjectForm = document.getElementById("add-object-form");
-    const addObjectResponse = document.getElementById("add-object-response");
-    addObjectForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const objectName = e.target["object-name"].value;
+    const animalsTableBody = document.getElementById('animals-body');
+    const animalForm = document.getElementById('animal-form');
+    const formTitle = document.getElementById('form-title');
+    const submitButton = document.getElementById('submit-button');
 
-        const accessError = checkAccess(['admin']);
-        if (accessError) {
-            addObjectResponse.textContent = accessError;
-            return;
-        }
+    function displayAnimals(animals) {
+        console.log('Displaying animals:', animals); // Log the animals array
+        animalsTableBody.innerHTML = '';
+
+        animals.forEach(animal => {
+            const row = document.createElement('tr');
+
+            row.innerHTML = `
+                <td>${animal.name}</td>
+                <td>${animal.type}</td>
+                <td>${animal.gender}</td>
+                <td>${animal.age}</td>
+                <td>${animal.price}</td>
+                <td>${animal.description}</td>
+                <td>${animal.status}</td>
+                <td class="actions">
+                    <button class="edit-btn" onclick="editAnimal('${animal.id}')">Edit</button>
+                    <button class="delete-btn" onclick="deleteAnimal('${animal.id}')">Delete</button>
+                </td>
+            `;
+
+            animalsTableBody.appendChild(row);
+        });
+    }
+
+    animalForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const animalData = {
+            name: document.getElementById('name').value,
+            type: document.getElementById('type').value,
+            gender: document.getElementById('gender').value,
+            age: parseInt(document.getElementById('age').value, 10),
+            price: parseFloat(document.getElementById('price').value),
+            description: document.getElementById('description').value,
+            status: document.getElementById('status').value,
+        };
+
         try {
-            const jwtToken = getAuthToken();
-            const response = await fetch(`${apiBaseUrl}/objects`, {
-                method: "POST",
+            const method = editingAnimalId ? 'PUT' : 'POST';
+            const url = editingAnimalId 
+                ? `${apiBaseUrl}/api/v1.0/animals/${editingAnimalId}` 
+                : `${apiBaseUrl}/api/v1.0/animals`;
+
+            console.log('Submitting animal:', animalData);
+            console.log('Method:', method);
+            console.log('URL:', url);
+
+            const response = await fetch(url, {
+                method: method,
                 headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${jwtToken}`
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getAuthToken()}`
                 },
-                body: JSON.stringify({ name: objectName }),
+                body: JSON.stringify(animalData)
             });
-            const data = await response.json();
-            addObjectResponse.textContent = JSON.stringify(data, null, 2);
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Error saving animal');
+            }
+
+            // Resetting the form after success
+            editingAnimalId = null;
+            formTitle.textContent = 'Add Animal';  // Reset form title
+            submitButton.textContent = 'Add Animal';  // Reset submit button
+            animalForm.reset();
+            fetchAnimals();  // Reload the animal list
         } catch (error) {
-            addObjectResponse.textContent = `Error: ${error.message}`;
+            console.error('Error saving animal:', error);
         }
     });
 
-    // Get Countries
-    const getCountriesButton = document.getElementById("get-countries");
-    const countriesResponse = document.getElementById("countries-response");
-    getCountriesButton.addEventListener("click", async () => {
-        const accessError = checkAccess(['admin', 'user']);
-        if (accessError) {
-            countriesResponse.textContent = accessError;
-            return;
-        }
+    window.editAnimal = async function (id) {
         try {
-            const jwtToken = getAuthToken();
-            const response = await fetch(`${apiBaseUrl}/api/countries`, {
-                method: "GET",
+            const response = await fetch(`${apiBaseUrl}/api/v1.0/animals/${id}`, {
                 headers: {
-                    "Authorization": `Bearer ${jwtToken}`
+                    'Authorization': `Bearer ${getAuthToken()}`
                 }
             });
-            const data = await response.json();
-            countriesResponse.textContent = JSON.stringify(data, null, 2);
-        } catch (error) {
-            countriesResponse.textContent = `Error: ${error.message}`;
-        }
-    });
 
-    // Get Users
-    const getUsersButton = document.getElementById("get-users");
-    const usersResponse = document.getElementById("users-response");
-    getUsersButton.addEventListener("click", async () => {
-        const accessError = checkAccess(['admin']);
-        if (accessError) {
-            usersResponse.textContent = accessError;
-            return;
-        }
-        try {
-            const jwtToken = getAuthToken();
-            const response = await fetch(`${apiBaseUrl}/api/users`, {
-                method: "GET",
-                headers: {
-                    "Authorization": `Bearer ${jwtToken}`
-                }
-            });
-            const data = await response.json();
-            usersResponse.textContent = JSON.stringify(data, null, 2);
-        } catch (error) {
-            usersResponse.textContent = `Error: ${error.message}`;
-        }
-    });
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Error fetching animal');
+            }
 
-    // Get Products
-    const getProductsButton = document.getElementById("get-products");
-    const productsResponse = document.getElementById("products-response");
-    getProductsButton.addEventListener("click", async () => {
-        const accessError = checkAccess(['user']);
-        if (accessError) {
-            productsResponse.textContent = accessError;
-            return;
+            const animal = await response.json();
+
+            // Populate form with existing animal data
+            document.getElementById('name').value = animal.name;
+            document.getElementById('type').value = animal.type;
+            document.getElementById('gender').value = animal.gender;
+            document.getElementById('age').value = animal.age;
+            document.getElementById('price').value = animal.price;
+            document.getElementById('description').value = animal.description;
+            document.getElementById('status').value = animal.status;
+
+            editingAnimalId = id; // Set the ID to edit
+            formTitle.textContent = 'Edit Animal';
+            submitButton.textContent = 'Update Animal';  // Change button to 'Update'
+        } catch (error) {
+            console.error('Error fetching animal:', error);
         }
+    };
+
+    window.deleteAnimal = async function (id) {
         try {
-            const jwtToken = getAuthToken();
-            const response = await fetch(`${apiBaseUrl}/api/products`, {
-                method: "GET",
+            await fetch(`${apiBaseUrl}/api/v1.0/animals/${id}`, {
+                method: 'DELETE',
                 headers: {
-                    "Authorization": `Bearer ${jwtToken}`
+                    'Authorization': `Bearer ${getAuthToken()}`
                 }
             });
-            const data = await response.json();
-            productsResponse.textContent = JSON.stringify(data, null, 2);
+            fetchAnimals(); // Reload animals after deletion
         } catch (error) {
-            productsResponse.textContent = `Error: ${error.message}`;
+            console.error('Error deleting animal:', error);
         }
-    });
+    };
+
+    fetchAnimals();
 });
